@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { AttendanceDailyRecord, AttendanceRecord, SIKOWALIDatabase } from "../types";
-import { AlertCircle, Calendar, CheckCircle, Clock, Eye, FileText, TrendingUp } from "lucide-react";
-import { formatLastUpdated, latestUpdatedAt } from "../utils/lastUpdated";
+import { AlertCircle, Calendar, CheckCircle, Eye, FileText, TrendingUp } from "lucide-react";
 
 interface AbsensiTabProps {
   db: SIKOWALIDatabase;
@@ -105,10 +104,6 @@ export default function AbsensiTab({ db }: AbsensiTabProps) {
     )
     .sort((a, b) => b.date.localeCompare(a.date));
   const periodLabel = selectedMonth === "all" ? `Semester ${selectedSemester}` : `${selectedMonth} - Semester ${selectedSemester}`;
-  const lastUpdated = latestUpdatedAt([
-    ...visibleAttendance.map((record) => record.updatedAt),
-    ...dailyRecords.map((record) => record.updatedAt),
-  ]);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -156,10 +151,6 @@ export default function AbsensiTab({ db }: AbsensiTabProps) {
           <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-xl px-3 py-1.5">
             <Calendar className="w-3.5 h-3.5 text-slate-500" />
             Tahun Ajaran {db.schoolSettings?.academicYear || "-"}
-          </span>
-          <span className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-100 rounded-xl px-3 py-1.5 text-emerald-700">
-            <Clock className="w-3.5 h-3.5" />
-            Last Updated: {formatLastUpdated(lastUpdated)}
           </span>
         </div>
       </div>
@@ -232,7 +223,6 @@ export default function AbsensiTab({ db }: AbsensiTabProps) {
                 <th className="px-5 py-3.5 text-center">Izin</th>
                 <th className="px-5 py-3.5 text-center">Alpha</th>
                 <th className="px-5 py-3.5 text-center">Rata-rata Kehadiran</th>
-                <th className="px-5 py-3.5 whitespace-nowrap">Last Updated</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -257,12 +247,11 @@ export default function AbsensiTab({ db }: AbsensiTabProps) {
                         {m.persentase}% Kehadiran
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-slate-500 whitespace-nowrap">{formatLastUpdated(m.updatedAt)}</td>
                   </tr>
                 );
               }) : (
                 <tr>
-                  <td colSpan={7} className="px-5 py-8 text-center text-slate-400 font-bold">
+                  <td colSpan={6} className="px-5 py-8 text-center text-slate-400 font-bold">
                     Belum ada data absensi pada periode ini.
                   </td>
                 </tr>
@@ -285,7 +274,6 @@ export default function AbsensiTab({ db }: AbsensiTabProps) {
                   <th className="px-5 py-3.5">Tanggal</th>
                   <th className="px-5 py-3.5 w-32">Status</th>
                   <th className="px-5 py-3.5">Catatan</th>
-                  <th className="px-5 py-3.5 whitespace-nowrap">Last Updated</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -299,11 +287,10 @@ export default function AbsensiTab({ db }: AbsensiTabProps) {
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-slate-500 font-semibold">{record.note || "-"}</td>
-                    <td className="px-5 py-3.5 text-slate-500 font-semibold whitespace-nowrap">{formatLastUpdated(record.updatedAt)}</td>
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan={4} className="px-5 py-8 text-center text-slate-400 font-bold">
+                    <td colSpan={3} className="px-5 py-8 text-center text-slate-400 font-bold">
                       Belum ada riwayat absensi harian untuk bulan ini.
                     </td>
                   </tr>

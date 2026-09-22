@@ -60,7 +60,7 @@ export default function WallTab({ db, onAddFeedback, onLikeFeedback, onAddFeedba
       item.comments.map((comment) => `${comment.date} - ${comment.author}: ${comment.text}`).join("\n"),
     ]);
     const schoolName = (db.schoolSettings?.name || "sikowali").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    await downloadExcel(`backup-masukan-wali-${schoolName || "sikowali"}.xlsx`, [header, ...rows], "Masukan Wali");
+    await downloadExcel(`backup-wall-${schoolName || "sikowali"}.xlsx`, [header, ...rows], "Backup Wall");
   };
 
   return (
@@ -84,7 +84,7 @@ export default function WallTab({ db, onAddFeedback, onLikeFeedback, onAddFeedba
           className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-4 rounded-xl shadow font-black text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-emerald-400"
         >
           <Plus className="w-4.5 h-4.5" />
-          {role === "Admin" ? "Tambah Masukan Wali" : "Kirim Masukan Anda"}
+          {role === "Admin" ? "Tambah Masukan Wall" : "Kirim Masukan Anda"}
         </button>
         <button
           onClick={exportWallExcel}
@@ -92,14 +92,14 @@ export default function WallTab({ db, onAddFeedback, onLikeFeedback, onAddFeedba
           className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-4 rounded-xl shadow font-black text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
         >
           <Download className="w-4.5 h-4.5" />
-          Backup Masukan Excel
+          Backup Wall Excel
         </button>
       </div>
 
       {/* Write suggestion modal block layout */}
       {showSubmitModal && (
         <form onSubmit={handleCreateFeedback} className="bg-slate-50 border border-slate-200/60 p-5 rounded-2xl space-y-4 animate-fade-in">
-          <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider block">{role === "Admin" ? "Kelola Masukan / Aspirasi Wali Murid" : "Kirim Masukan / Aspirasi Wali Murid"}</h4>
+          <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider block">{role === "Admin" ? "Kelola Masukan / Aspirasi Wall" : "Kirim Masukan / Aspirasi Wali Murid"}</h4>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
@@ -159,7 +159,7 @@ export default function WallTab({ db, onAddFeedback, onLikeFeedback, onAddFeedba
       {/* Feed list stream layout */}
       <div className="wall-print-area space-y-4.5">
         <div className="hidden print:block bg-white border-b border-slate-200 pb-4 mb-4">
-          <h1 className="text-lg font-black text-slate-900">Backup Masukan Wali Murid</h1>
+          <h1 className="text-lg font-black text-slate-900">Backup Masukan Wall</h1>
           <p className="text-xs font-semibold text-slate-500">{db.schoolSettings?.name || "SIKOWALI"} • Total {feedback.length} masukan</p>
         </div>
         {feedback.map((item) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Contrast, HelpCircle, Search, Settings, Database, LogOut } from "lucide-react";
+import { Search, Settings, Database, LogOut } from "lucide-react";
 import { Role } from "../types";
 
 interface HeaderProps {
@@ -12,13 +12,10 @@ interface HeaderProps {
   isUsingMariaDB?: boolean;
   onLogout: () => void;
   onOpenProfile: () => void;
-  onOpenGuide?: () => void;
-  highContrast?: boolean;
-  onToggleHighContrast?: () => void;
   displayName?: string;
 }
 
-export default function Header({ role, tabLabel, schoolName, schoolLogoUrl, isUsingPostgreSQL, isUsingMariaDB, onLogout, onOpenProfile, onOpenGuide, highContrast, onToggleHighContrast, displayName }: HeaderProps) {
+export default function Header({ role, tabLabel, schoolName, schoolLogoUrl, isUsingPostgreSQL, isUsingMariaDB, onLogout, onOpenProfile, displayName }: HeaderProps) {
   const dbConnected = isUsingPostgreSQL || isUsingMariaDB;
   const showAdminBadges = role === "Admin" || role === "Administrator";
   const roleLabel = role === "orangtua" ? "Orang Tua" : role === "WaliKelas" ? "Wali Kelas" : role === "kepalasekolah" ? "Kepala Sekolah" : role;
@@ -77,38 +74,6 @@ export default function Header({ role, tabLabel, schoolName, schoolLogoUrl, isUs
             <span className="block text-[9px] text-slate-400 font-bold mt-1">{roleLabel}</span>
           </div>
         </div>
-
-        {onOpenGuide && (
-          <button
-            onClick={onOpenGuide}
-            id="header-guide-btn"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
-            title="Buka Panduan Pengguna"
-            type="button"
-          >
-            <HelpCircle className="w-4 h-4" />
-            Panduan
-          </button>
-        )}
-
-        {onToggleHighContrast && (
-          <button
-            onClick={onToggleHighContrast}
-            id="header-contrast-btn"
-            className={`inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl transition-all ${
-              highContrast
-                ? "bg-slate-950 text-white border border-slate-950"
-                : "text-slate-600 hover:text-emerald-600 hover:bg-emerald-50"
-            }`}
-            title={highContrast ? "Matikan mode kontras tinggi" : "Aktifkan mode kontras tinggi agar teks dan batas elemen lebih jelas"}
-            aria-label={highContrast ? "Matikan mode kontras tinggi" : "Aktifkan mode kontras tinggi"}
-            aria-pressed={!!highContrast}
-            type="button"
-          >
-            <Contrast className="w-4 h-4" />
-            Kontras
-          </button>
-        )}
 
         <button
           onClick={onOpenProfile}

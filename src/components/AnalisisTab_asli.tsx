@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Sparkles, RefreshCw, AlertTriangle, Info, Download } from "lucide-react";
+import { Sparkles, RefreshCw, CheckCircle2, TrendingUp, AlertTriangle, BookOpen, Clock, Activity, Download } from "lucide-react";
 
 interface AnalisisTabProps {
   db: any;
@@ -48,20 +48,14 @@ export default function AnalisisTab({ db, sessionToken }: AnalisisTabProps) {
       <div className="flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center bg-white border border-slate-100 p-4 rounded-xl shadow-sm">
         <div>
           <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-            <Sparkles className="w-4.5 h-4.5 text-emerald-500 animate-pulse" aria-hidden="true" />
+            <Sparkles className="w-4.5 h-4.5 text-emerald-500 animate-pulse" />
             Riset & Prediksi Akademik SIKOWALI AI
           </h3>
           <p className="text-xs text-slate-500">Menganalisis perkembangan belajar mingguan, grafik ujian, absensi, dan memprediksi rekomendasi rumah.</p>
-          <p className="mt-2 inline-flex items-start gap-1.5 rounded-xl bg-emerald-50 border border-emerald-100 px-3 py-2 text-[11px] font-semibold text-emerald-800">
-            <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" aria-hidden="true" />
-            AI membantu membaca pola data, tetapi keputusan pendampingan tetap mengikuti arahan wali kelas dan sekolah.
-          </p>
         </div>
         <button
           onClick={fetchAIReport}
           disabled={loading}
-          title="Jalankan ulang analisis AI berdasarkan data nilai, kehadiran, dan catatan terbaru."
-          aria-label="Perbarui analisis AI berdasarkan data terbaru."
           className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-slate-100 font-bold transition-all text-xs px-3.5 py-2 rounded-xl h-9 cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
@@ -106,7 +100,7 @@ export default function AnalisisTab({ db, sessionToken }: AnalisisTabProps) {
               <p className="text-xs font-semibold text-slate-500">{db.schoolSettings?.name || "SIKOWALI"} • {db.schoolSettings?.academicYear || "-"}</p>
             </div>
             <div className="absolute right-0 top-0 translate-x-16 -translate-y-16 w-36 h-36 bg-emerald-500/5 rounded-full blur-xl" />
-            <h4 className="text-[10px] font-bold text-emerald-600 tracking-wider uppercase" title="Ringkasan utama hasil pembacaan AI dari data akademik siswa.">Ringkasan Diagnostic</h4>
+            <h4 className="text-[10px] font-bold text-emerald-600 tracking-wider uppercase">Ringkasan Diagnostic</h4>
             <p className="text-xs text-slate-700 leading-relaxed font-medium">
               {report.ringkasan}
             </p>
@@ -134,14 +128,14 @@ export default function AnalisisTab({ db, sessionToken }: AnalisisTabProps) {
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-xs font-bold text-slate-800">{subj.subject}</span>
                       <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border flex items-center gap-1.5 ${badgeColor}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} title={`Status AI untuk ${subj.subject}: ${subj.status}`} />
+                        <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
                         {subj.status}
                       </span>
                     </div>
                     <div className="space-y-2">
                       <p className="text-[11px] text-slate-500 leading-normal font-medium">{subj.analisis}</p>
                       <div className="border-t border-slate-50 pt-2.5">
-                        <span className="text-[9px] text-slate-400 font-bold uppercase block mb-1" title="Saran tindak lanjut otomatis berdasarkan data yang tersedia.">REKOMENDASI AI</span>
+                        <span className="text-[9px] text-slate-400 font-bold uppercase block mb-1">REKOMENDASI AI</span>
                         <p className="text-[11px] text-slate-600 leading-relaxed">{subj.rekomendasi}</p>
                       </div>
                     </div>
@@ -185,7 +179,7 @@ export default function AnalisisTab({ db, sessionToken }: AnalisisTabProps) {
                 {report.kesimpulan}
               </p>
             </div>
-            <button onClick={backupPdf} title="Simpan tampilan analisis AI sebagai PDF." className="print:hidden w-full sm:w-auto text-xs font-bold bg-white text-slate-950 hover:bg-slate-150 transition-all px-4 py-2 rounded-xl flex items-center justify-center gap-2 cursor-pointer h-9 shrink-0">
+            <button onClick={backupPdf} className="print:hidden w-full sm:w-auto text-xs font-bold bg-white text-slate-950 hover:bg-slate-150 transition-all px-4 py-2 rounded-xl flex items-center justify-center gap-2 cursor-pointer h-9 shrink-0">
               <Download className="w-4 h-4" />
               Simpan PDF Laporan
             </button>

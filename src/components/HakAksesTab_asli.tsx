@@ -102,8 +102,8 @@ export default function HakAksesTab({ currentRole, db, sessionToken, onRefresh }
             <Shield className="w-5 h-5" />
           </div>
           <div className="flex-1">
-            <h3 className="font-black">Hak Akses Pengguna</h3>
-            <p className="text-xs text-emerald-50/80 font-medium">Administrator dapat mengatur izin tambah, lihat, ubah, dan hapus untuk setiap halaman per peran.</p>
+            <h3 className="font-black">Matriks Hak Akses CRUD</h3>
+            <p className="text-xs text-emerald-50/80 font-medium">Administrator dapat mengatur izin Create, Read, Update, dan Delete setiap halaman per role.</p>
           </div>
           <span className="px-3 py-1 rounded-lg bg-white/10 text-[10px] font-black">Role aktif: {roles.find((r) => r.key === currentRole)?.label || currentRole}</span>
         </div>

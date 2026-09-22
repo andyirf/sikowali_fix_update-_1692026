@@ -43,7 +43,6 @@ import {
   createTeacher,
   createKarya,
   getUserById,
-  getUserByUsername,
   updateUser,
   deleteUser,
   updateStudent,
@@ -81,13 +80,10 @@ const SESSION_COOKIE_NAME = "sikowali_session";
 const UNSAFE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 const CSRF_EXEMPT_PATHS = new Set(["/api/login", "/api/register-parent"]);
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
-const PARENT_LOGIN_MAX_FAILURES = 3;
-const PARENT_LOGIN_LOCK_MS = 60 * 1000;
 const FEEDBACK_WINDOW_MS = 60 * 1000;
 const MAX_IMAGE_UPLOAD_BYTES = 2 * 1024 * 1024;
 const sessions = new Map<string, { user: any; expiresAt: number }>();
 const loginAttempts = new Map<string, { count: number; resetAt: number }>();
-const parentLoginAttempts = new Map<string, { count: number; lockedUntil: number }>();
 const feedbackAttempts = new Map<string, { count: number; resetAt: number }>();
 const UPLOAD_ROOT = path.join(process.cwd(), "storage", "uploads");
 const PROFILE_UPLOAD_DIR = path.join(UPLOAD_ROOT, "profiles");
@@ -207,35 +203,6 @@ function isRateLimited(bucket: Map<string, { count: number; resetAt: number }>, 
   }
   current.count += 1;
   return current.count > max;
-}
-
-function normalizeLoginUsername(username: unknown) {
-  return String(username || "").trim().toLowerCase();
-}
-
-function getParentLoginLockMs(username: string) {
-  const key = normalizeLoginUsername(username);
-  const current = parentLoginAttempts.get(key);
-  if (!current) return 0;
-  const remaining = current.lockedUntil - Date.now();
-  if (remaining <= 0) {
-    parentLoginAttempts.delete(key);
-    return 0;
-  }
-  return remaining;
-}
-
-function recordParentLoginFailure(username: string) {
-  const key = normalizeLoginUsername(username);
-  const current = parentLoginAttempts.get(key);
-  const count = (current?.count || 0) + 1;
-  const lockedUntil = count >= PARENT_LOGIN_MAX_FAILURES ? Date.now() + PARENT_LOGIN_LOCK_MS : 0;
-  parentLoginAttempts.set(key, { count, lockedUntil });
-  return { attemptsRemaining: Math.max(0, PARENT_LOGIN_MAX_FAILURES - count), retryAfterMs: Math.max(0, lockedUntil - Date.now()) };
-}
-
-function clearParentLoginFailures(username: string) {
-  parentLoginAttempts.delete(normalizeLoginUsername(username));
 }
 
 function hasValidImageSignature(mime: string, buffer: Buffer) {
@@ -644,45 +611,19 @@ app.post("/api/register-parent", async (req, res) => {
 });
 
 app.post("/api/login", async (req, res) => {
+  const rateKey = req.ip || req.socket.remoteAddress || "unknown";
+  if (isRateLimited(loginAttempts, rateKey, 10, LOGIN_WINDOW_MS)) {
+    return res.status(429).json({ error: "Terlalu banyak percobaan login. Coba lagi beberapa menit lagi." });
+  }
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: "Username dan password wajib diisi." });
   }
-  const normalizedUsername = normalizeLoginUsername(username);
-  const rateKey = `${req.ip || req.socket.remoteAddress || "unknown"}:${normalizedUsername}`;
-  if (isRateLimited(loginAttempts, rateKey, 10, LOGIN_WINDOW_MS)) {
-    return res.status(429).json({ error: "Terlalu banyak percobaan login untuk username ini. Coba lagi beberapa menit lagi." });
-  }
   try {
-    const loginUser = await getUserByUsername(normalizedUsername);
-    const isParentLogin = loginUser?.role === "orangtua";
-    if (isParentLogin) {
-      const retryAfterMs = getParentLoginLockMs(normalizedUsername);
-      if (retryAfterMs > 0) {
-        return res.status(429).json({
-          error: "Akun orang tua terkunci sementara karena beberapa kali gagal login.",
-          retryAfterMs,
-        });
-      }
-    }
     const user = await authenticateUser(username, password);
     if (!user) {
-      if (isParentLogin) {
-        const lockState = recordParentLoginFailure(normalizedUsername);
-        if (lockState.retryAfterMs > 0) {
-          return res.status(429).json({
-            error: "Akun orang tua terkunci sementara karena beberapa kali gagal login.",
-            retryAfterMs: lockState.retryAfterMs,
-          });
-        }
-        return res.status(401).json({
-          error: `Username atau password tidak sesuai. Sisa percobaan: ${lockState.attemptsRemaining}.`,
-          attemptsRemaining: lockState.attemptsRemaining,
-        });
-      }
       return res.status(401).json({ error: "Username atau password tidak sesuai." });
     }
-    if (user.role === "orangtua") clearParentLoginFailures(user.username);
     const token = randomUUID();
     sessions.set(token, { user, expiresAt: Date.now() + SESSION_TTL_MS });
     setSessionCookie(res, token);

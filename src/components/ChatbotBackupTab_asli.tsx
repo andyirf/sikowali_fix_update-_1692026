@@ -107,15 +107,15 @@ export default function ChatbotBackupTab({ sessionToken }: ChatbotBackupTabProps
       <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <h3 className="text-sm font-bold text-slate-900">Arsip Percakapan AI</h3>
-            <p className="text-xs text-slate-500 mt-1">Riwayat pertanyaan dan jawaban Tanya SIKOWALI dari portal pengguna.</p>
+            <h3 className="text-sm font-bold text-slate-900">Backup Chatbot AI</h3>
+            <p className="text-xs text-slate-500 mt-1">Arsip pertanyaan dan jawaban chatbot dari portal pengguna.</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button onClick={loadBackups} disabled={loading} title="Muat ulang arsip percakapan AI terbaru dari server." className="inline-flex items-center gap-2 h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-600 hover:bg-white disabled:opacity-50">
+            <button onClick={loadBackups} disabled={loading} className="inline-flex items-center gap-2 h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-600 hover:bg-white disabled:opacity-50">
               <RefreshCw className="w-4 h-4" />
               Muat Ulang
             </button>
-            <button onClick={exportExcel} disabled={!filteredBackups.length} title="Unduh arsip percakapan AI yang sedang difilter ke file Excel." className="inline-flex items-center gap-2 h-10 px-3 rounded-xl bg-emerald-500 text-slate-950 text-xs font-black hover:bg-emerald-400 disabled:opacity-50">
+            <button onClick={exportExcel} disabled={!filteredBackups.length} className="inline-flex items-center gap-2 h-10 px-3 rounded-xl bg-emerald-500 text-slate-950 text-xs font-black hover:bg-emerald-400 disabled:opacity-50">
               <Download className="w-4 h-4" />
               Export Excel
             </button>

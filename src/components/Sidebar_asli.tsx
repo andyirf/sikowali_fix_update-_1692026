@@ -36,35 +36,35 @@ export default function Sidebar({ currentTab, setTab, role, unreadCount, schoolS
   const logoUrl = schoolSettings?.logoUrl || "";
   // Navigation menus categorized by sections
   const menuUtama = [
-    { id: "beranda", label: "Beranda", icon: Home, description: "Ringkasan informasi utama portal.", roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Admin", "Administrator", "Murid"] },
+    { id: "beranda", label: "Beranda", icon: Home, roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Admin", "Administrator", "Murid"] },
   ];
 
   const menuInfoAnak = [
-    { id: "rapor", label: "Nilai Anak", icon: FileText, description: "Lihat nilai, KKM, catatan, dan waktu pembaruan data.", roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Murid"] },
-    { id: "absensi", label: "Kehadiran", icon: Calendar, description: "Pantau hadir, sakit, izin, alpha, dan riwayat harian.", roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Murid"] },
-    { id: "catatan", label: "Catatan Guru", icon: MessageSquare, description: "Baca catatan perilaku, kedisiplinan, dan prestasi anak.", roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah"] },
-    { id: "karya", label: "Karya Anak", icon: LayoutGrid, description: "Lihat dokumentasi karya dan kegiatan anak.", roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Murid"] },
+    { id: "rapor", label: "Nilai & Rapor", icon: FileText, roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Murid"] },
+    { id: "absensi", label: "Absensi", icon: Calendar, roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Murid"] },
+    { id: "catatan", label: "Catatan Perilaku", icon: MessageSquare, roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah"] },
+    { id: "karya", label: "Dokumentasi & Karya", icon: LayoutGrid, roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Murid"] },
   ];
 
   const menuAIKomunikasi = [
-    { id: "analisisAI", label: "Analisis Perkembangan", icon: Sparkles, description: "AI merangkum nilai, kehadiran, dan catatan menjadi rekomendasi pendampingan.", roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah"] },
-    { id: "chatbot", label: "Tanya SIKOWALI", icon: MessageCircle, description: "Ajukan pertanyaan tentang informasi sekolah dan perkembangan anak.", roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Murid"] },
-    { id: "backupChatbot", label: "Arsip Percakapan AI", icon: Archive, description: "Lihat dan unduh riwayat pertanyaan serta jawaban AI.", roles: ["WaliKelas", "Admin", "Administrator"] },
-    { id: "notifikasi", label: "Notifikasi", icon: Bell, badge: unreadCount, description: "Pemberitahuan penting dari sekolah.", roles: ["orangtua", "WaliKelas", "Murid"] },
-    { id: "pengumuman", label: "Pengumuman Sekolah", icon: Volume2, description: "Informasi resmi dari sekolah.", roles: ["orangtua", "WaliKelas", "Guru", "Admin", "Administrator", "Murid"] },
-    { id: "parenting", label: "Tips Orang Tua", icon: BookOpen, description: "Artikel singkat untuk mendampingi anak di rumah.", roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Admin", "Administrator"] },
-    { id: "wall", label: "Masukan Wali Murid", icon: MessageSquare, description: "Kirim apresiasi, saran, atau keluhan kepada sekolah.", roles: ["orangtua", "WaliKelas", "Guru", "Admin", "Administrator"] },
+    { id: "analisisAI", label: "Analisis AI", icon: Sparkles, roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah"] },
+    { id: "chatbot", label: "Chatbot Sikowali", icon: MessageCircle, roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Murid"] },
+    { id: "backupChatbot", label: "Backup Chatbot", icon: Archive, roles: ["WaliKelas", "Admin", "Administrator"] },
+    { id: "notifikasi", label: "Notifikasi", icon: Bell, badge: unreadCount, roles: ["orangtua", "WaliKelas", "Murid"] },
+    { id: "pengumuman", label: "Pengumuman", icon: Volume2, roles: ["orangtua", "WaliKelas", "Guru", "Admin", "Administrator", "Murid"] },
+    { id: "parenting", label: "Ruang Parenting", icon: BookOpen, roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Admin", "Administrator"] },
+    { id: "wall", label: "Masukkan Wall", icon: MessageSquare, roles: ["orangtua", "WaliKelas", "Guru", "Admin", "Administrator"] },
   ];
 
   const menuManajemen = [
-    { id: "inputNilai", label: "Isi Nilai", icon: PlusCircle, description: "Masukkan dan perbarui nilai siswa.", roles: ["WaliKelas", "Admin", "Administrator"] },
-    { id: "inputAbsensi", label: "Isi Kehadiran", icon: CheckSquare, description: "Catat kehadiran harian atau rekap semester.", roles: ["WaliKelas"] },
-    { id: "rekapSemester", label: "Laporan Semester", icon: ClipboardList, description: "Cetak ringkasan nilai, kehadiran, dan catatan siswa.", roles: ["WaliKelas"] },
-    { id: "manajemen", label: "Kelola Data", icon: Database, description: "Kelola data siswa, guru, kelas, dan akun.", roles: ["Admin", "Administrator", "WaliKelas"] },
-    { id: "dataSekolah", label: "Data Sekolah", icon: Building2, description: "Ubah identitas dan kontak sekolah.", roles: ["Admin", "Administrator"] },
-    { id: "settingAI", label: "Pengaturan AI", icon: Settings, description: "Atur provider, model, dan status fitur AI.", roles: ["Administrator"] },
-    { id: "hakAkses", label: "Hak Akses Pengguna", icon: Shield, description: "Atur fitur yang boleh dibuka tiap peran.", roles: ["Administrator"] },
-    { id: "profil", label: "Profil Saya", icon: User, description: "Lihat dan ubah informasi akun Anda.", roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Admin", "Administrator", "Murid"] },
+    { id: "inputNilai", label: "Input Nilai", icon: PlusCircle, roles: ["WaliKelas", "Admin", "Administrator"] },
+    { id: "inputAbsensi", label: "Input Absensi", icon: CheckSquare, roles: ["WaliKelas"] },
+    { id: "rekapSemester", label: "Rekap Semester", icon: ClipboardList, roles: ["WaliKelas"] },
+    { id: "manajemen", label: "Manajemen Data", icon: Database, roles: ["Admin", "Administrator", "WaliKelas"] },
+    { id: "dataSekolah", label: "Data Sekolah", icon: Building2, roles: ["Admin", "Administrator"] },
+    { id: "settingAI", label: "Setting AI", icon: Settings, roles: ["Administrator"] },
+    { id: "hakAkses", label: "Matriks Hak Akses", icon: Shield, roles: ["Administrator"] },
+    { id: "profil", label: "Profil Saya", icon: User, roles: ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Admin", "Administrator", "Murid"] },
   ];
 
   const renderItem = (item: any) => {
@@ -75,8 +75,6 @@ export default function Sidebar({ currentTab, setTab, role, unreadCount, schoolS
         key={item.id}
         id={`sidebar-item-${item.id}`}
         onClick={() => setTab(item.id)}
-        title={`${item.label}: ${item.description || "Buka menu ini."}`}
-        aria-label={`${item.label}. ${item.description || "Buka menu ini."}`}
         className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
           isActive 
             ? "bg-yellow-400 text-slate-950 shadow-sm border border-yellow-300" 
@@ -84,7 +82,7 @@ export default function Sidebar({ currentTab, setTab, role, unreadCount, schoolS
         }`}
       >
         <div className="flex items-center gap-3">
-          <Icon className={`w-4 h-4 ${isActive ? "text-slate-950" : "text-emerald-100/80"}`} aria-hidden="true" />
+          <Icon className={`w-4 h-4 ${isActive ? "text-slate-950" : "text-emerald-100/80"}`} />
           <span>{item.label}</span>
         </div>
         {item.badge !== undefined && item.badge > 0 && (

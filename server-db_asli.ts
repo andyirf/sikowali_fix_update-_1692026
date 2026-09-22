@@ -1848,14 +1848,6 @@ export async function getUserById(id: string) {
   return rows[0] ? rowToUser(rows[0]) : null;
 }
 
-export async function getUserByUsername(username: string) {
-  if (!isDbActive || !pool) {
-    return (IN_MEMORY_DB.users || []).find((u) => u.username.toLowerCase() === username.toLowerCase()) || null;
-  }
-  const [rows] = await pool.query<any[]>("SELECT * FROM users WHERE LOWER(username) = LOWER(?) LIMIT 1", [username]);
-  return rows[0] ? rowToUser(rows[0]) : null;
-}
-
 export async function deleteUser(id: string) {
   if (!isDbActive || !pool) {
     const linkedStudent = (IN_MEMORY_DB.students || []).find((student) => student.parentId === id);

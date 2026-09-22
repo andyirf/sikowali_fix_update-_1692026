@@ -21,17 +21,13 @@ import HakAksesTab from "./components/HakAksesTab";
 import ManajemenTab from "./components/ManajemenTab";
 import SettingAITab from "./components/SettingAITab";
 import DataSekolahTab from "./components/DataSekolahTab";
-import OnboardingGuide from "./components/OnboardingGuide";
 
 import { Role, SIKOWALIDatabase, SubjectScore, AttendanceRecord, AttendanceStatus, Announcement, SchoolSettings, User as PortalUser, DisciplineType } from "./types";
-import { Sparkles, BookOpen, ArrowRight, Lock, Search, Table2, GraduationCap, Phone, X, Eye, EyeOff } from "lucide-react";
+import { Sparkles, BookOpen, LogOut, CheckCircle, HelpCircle, ArrowRight, Activity, Smile, User, Lock, MessageSquare, Search, Table2, GraduationCap, Phone, X, Eye, Eyeoff } from "lucide-react";
 
 const LAST_ACTIVITY_KEY = "sikowali:last-activity";
-const ONBOARDING_SEEN_KEY_PREFIX = "sikowali:onboarding-seen:";
-const HIGH_CONTRAST_KEY = "sikowali:high-contrast";
 const IDLE_LOGOUT_MS = 10 * 60 * 1000;
 const KEEP_ALIVE_INTERVAL_MS = 60 * 1000;
-const LOGIN_COUNTDOWN_INTERVAL_MS = 1000;
 
 const ROLE_RESTRICTIONS: Record<string, Role[]> = {
   "rapor": ["orangtua", "WaliKelas", "Guru", "kepalasekolah", "Murid"],
@@ -81,13 +77,10 @@ export default function App() {
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
   const [showForgotPasswordHelp, setShowForgotPasswordHelp] = useState(false);
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [restoringSession, setRestoringSession] = useState(true);
   const [currentUser, setCurrentUser] = useState<PortalUser | null>(null);
   const [sessionToken, setSessionToken] = useState("");
   const [loginSchoolSettings, setLoginSchoolSettings] = useState<SchoolSettings | null>(null);
-  const [loginLock, setLoginLock] = useState<{ username: string; until: number } | null>(null);
-  const [loginCountdownNow, setLoginCountdownNow] = useState(Date.now());
 
   // Core application states
   const [db, setDb] = useState<SIKOWALIDatabase | null>(null);
@@ -98,18 +91,6 @@ export default function App() {
   const [showStudentTable, setShowStudentTable] = useState(false);
   const [showStudentDataFromTable, setShowStudentDataFromTable] = useState(false);
   const [studentTablePage, setStudentTablePage] = useState(1);
-  const [showOnboardingGuide, setShowOnboardingGuide] = useState(false);
-  const [highContrast, setHighContrast] = useState(() => {
-    try {
-      return localStorage.getItem(HIGH_CONTRAST_KEY) === "true";
-    } catch {
-      return false;
-    }
-  });
-  const normalizedLoginUsername = loginUsername.trim().toLowerCase();
-  const loginLockRemainingMs = loginLock?.username === normalizedLoginUsername ? Math.max(0, loginLock.until - loginCountdownNow) : 0;
-  const loginLockSeconds = Math.ceil(loginLockRemainingMs / 1000);
-  const isLoginLocked = loginLockRemainingMs > 0;
 
   const handleLogout = useCallback((reason?: string) => {
     fetch("/api/logout", {
@@ -133,27 +114,6 @@ export default function App() {
       })
       .catch(() => undefined);
   }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.add("accessibility-comfort");
-    document.documentElement.classList.toggle("high-contrast", highContrast);
-    try {
-      localStorage.setItem(HIGH_CONTRAST_KEY, String(highContrast));
-    } catch {
-      undefined;
-    }
-  }, [highContrast]);
-
-  useEffect(() => {
-    if (!loginLock) return;
-    setLoginCountdownNow(Date.now());
-    const timer = window.setInterval(() => setLoginCountdownNow(Date.now()), LOGIN_COUNTDOWN_INTERVAL_MS);
-    return () => window.clearInterval(timer);
-  }, [loginLock]);
-
-  useEffect(() => {
-    if (loginLock && loginLock.until <= loginCountdownNow) setLoginLock(null);
-  }, [loginLock, loginCountdownNow]);
 
   useEffect(() => {
     const lastActivity = readLastActivity();
@@ -203,17 +163,6 @@ export default function App() {
       showStudentDataFromTable,
     }));
   }, [isLoggedIn, currentUser, currentTab, selectedStudentId, selectedClassName, showStudentTable, showStudentDataFromTable]);
-
-  useEffect(() => {
-    if (!isLoggedIn || !currentUser) return;
-    const key = `${ONBOARDING_SEEN_KEY_PREFIX}${currentUser.id}`;
-    if (!localStorage.getItem(key)) setShowOnboardingGuide(true);
-  }, [isLoggedIn, currentUser]);
-
-  const closeOnboardingGuide = () => {
-    if (currentUser) localStorage.setItem(`${ONBOARDING_SEEN_KEY_PREFIX}${currentUser.id}`, "true");
-    setShowOnboardingGuide(false);
-  };
 
   useEffect(() => {
     if (!isLoggedIn || !currentUser) return;
@@ -451,10 +400,6 @@ export default function App() {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError(null);
-    if (isLoginLocked) {
-      setLoginError(`Akun orang tua terkunci sementara. Coba lagi dalam ${loginLockSeconds} detik.`);
-      return;
-    }
 
     try {
       const res = await fetch("/api/login", {
@@ -464,17 +409,9 @@ export default function App() {
       });
       const data = await res.json();
       if (!res.ok) {
-        if (data.retryAfterMs) {
-          const retryAfterMs = Number(data.retryAfterMs);
-          setLoginLock({ username: normalizedLoginUsername, until: Date.now() + retryAfterMs });
-          setLoginCountdownNow(Date.now());
-          setLoginError(`${data.error || "Akun orang tua terkunci sementara."} Coba lagi dalam ${Math.ceil(retryAfterMs / 1000)} detik.`);
-          return;
-        }
         setLoginError(data.error || "Username atau password salah.");
         return;
       }
-      setLoginLock(null);
       setCurrentUser(data.user);
       setSelectedRole(data.user.role);
       setSessionToken(data.sessionToken || "");
@@ -491,25 +428,25 @@ export default function App() {
   const getTabLabel = () => {
     switch (currentTab) {
       case "beranda": return "Beranda";
-      case "rapor": return "Nilai Anak";
-      case "absensi": return "Kehadiran";
-      case "catatan": return "Catatan Guru";
-      case "karya": return "Karya Anak";
-      case "analisisAI": return "Analisis Perkembangan";
-      case "chatbot": return "Tanya SIKOWALI";
-      case "backupChatbot": return "Arsip Percakapan AI";
+      case "rapor": return "Nilai & Rapor";
+      case "absensi": return "Kehadiran Murid";
+      case "catatan": return "Catatan Perilaku";
+      case "karya": return "Dokumentasi & Karya";
+      case "analisisAI": return "Analisis AI";
+      case "chatbot": return "Chatbot SIKOWALI";
+      case "backupChatbot": return "Backup Chatbot AI";
       case "notifikasi": return "Notifikasi";
       case "pengumuman": return "Pengumuman Sekolah";
-      case "parenting": return "Tips Orang Tua";
-      case "wall": return "Masukan Wali Murid";
-      case "inputNilai": return "Isi Nilai";
-      case "inputAbsensi": return "Isi Kehadiran";
-      case "rekapSemester": return "Laporan Semester";
+      case "parenting": return "Ruang Parenting";
+      case "wall": return "Masukkan Wall";
+      case "inputNilai": return "Input Nilai";
+      case "inputAbsensi": return "Input Absensi";
+      case "rekapSemester": return "Rekap Semester";
       case "profil": return "Profil Wali Murid";
-      case "hakAkses": return "Hak Akses Pengguna";
-      case "settingAI": return "Pengaturan AI";
+      case "hakAkses": return "Matriks Otorisasi & Hak Akses";
+      case "settingAI": return "Setting AI";
       case "dataSekolah": return "Data Sekolah";
-      case "manajemen": return "Kelola Data";
+      case "manajemen": return "Manajemen Data";
       default: return "SIKOWALI";
     }
   };
@@ -757,17 +694,6 @@ export default function App() {
                 {loginError}
               </div>
             )}
-            {isLoginLocked && (
-              <div className="bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3.5 rounded-xl font-bold flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
-                  <Lock className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-wide text-amber-600">Keamanan akun orang tua</p>
-                  <p>Coba login lagi dalam {loginLockSeconds} detik.</p>
-                </div>
-              </div>
-            )}
 
             {/* Login Inputs fields */}
             <form onSubmit={handleLoginSubmit} className="space-y-4">
@@ -788,20 +714,26 @@ export default function App() {
                   <label className="text-[10px] text-slate-400 font-bold uppercase block">KATA SANDI (PASSWORD)</label>
                   <button type="button" onClick={() => setShowForgotPasswordHelp(true)} className="text-[10px] font-bold text-slate-400 hover:text-emerald-600 transition-all">Lupa password?</button>
                 </div>
+                <input
+                  type="password"
+                  required
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Masukkan password Anda..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-emerald-500/10 focus:border-[#125B3d] transition-all focus:outline-none text-slate-700 font-semibold"
+                />
                 <div className="relative">
                   <input
                     type={showLoginPassword ? "text" : "password"}
                     required
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-                    disabled={isLoginLocked}
                     placeholder="Masukkan password Anda..."
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 pr-10 text-xs focus:ring-2 focus:ring-emerald-500/10 focus:border-[#125B3d] transition-all focus:outline-none text-slate-700 font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 pr-10 text-xs focus:ring-2 focus:ring-emerald-500/10 focus:border-[#125B3d] transition-all focus:outline-none text-slate-700 font-semibold"
                   />
                   <button
                     type="button"
                     onClick={() => setShowLoginPassword((value) => !value)}
-                    disabled={isLoginLocked}
                     className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
                     aria-label={showLoginPassword ? "Sembunyikan password" : "Tampilkan password"}
                   >
@@ -812,11 +744,10 @@ export default function App() {
 
               <button
                 type="submit"
-                disabled={isLoginLocked}
-                className="w-full h-11 bg-[#125B3d] hover:bg-[#0b3c28] text-white font-extrabold text-xs rounded-xl shadow hover:shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none disabled:cursor-not-allowed"
+                className="w-full h-11 bg-[#125B3d] hover:bg-[#0b3c28] text-white font-extrabold text-xs rounded-xl shadow hover:shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                {isLoginLocked ? `Tunggu ${loginLockSeconds} detik` : "Masuk ke Portal"}
-                {isLoginLocked ? <Lock className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+                Masuk ke Portal
+                <ArrowRight className="w-4 h-4" />
               </button>
             </form>
 
@@ -882,9 +813,6 @@ export default function App() {
           isUsingPostgreSQL={(db as any)?.isUsingPostgreSQL}
           displayName={db?.currentUser?.name}
           onOpenProfile={() => setCurrentTab("profil")}
-          onOpenGuide={() => setShowOnboardingGuide(true)}
-          highContrast={highContrast}
-          onToggleHighContrast={() => setHighContrast((value) => !value)}
           onLogout={() => handleLogout()}
         />
         
@@ -1061,14 +989,6 @@ export default function App() {
           {showStudentSelectorPanel && canSelectStudents && showStudentTable && !showStudentDataFromTable ? null : renderTabContent()}
         </main>
       </div>
-      <OnboardingGuide
-        role={selectedRole}
-        isOpen={showOnboardingGuide}
-        onClose={closeOnboardingGuide}
-        onNavigate={(tab) => {
-          if (canAccessTab(tab, selectedRole)) setCurrentTab(tab);
-        }}
-      />
     </div>
   );
 }

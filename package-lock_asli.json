@@ -939,9 +939,6 @@
       "cpu": [
         "arm"
       ],
-      "libc": [
-        "glibc"
-      ],
       "license": "MIT",
       "optional": true,
       "os": [
@@ -954,9 +951,6 @@
       "integrity": "sha512-J3Yh9PzzF1Ovah2At+lHiGQdsYgArxBbXv/zHfSyaiFQEqvNv7DcW98pCrmdjCZBrqBiKrKKe2V+aaSGWuBe/w==",
       "cpu": [
         "arm"
-      ],
-      "libc": [
-        "musl"
       ],
       "license": "MIT",
       "optional": true,
@@ -971,9 +965,6 @@
       "cpu": [
         "arm64"
       ],
-      "libc": [
-        "glibc"
-      ],
       "license": "MIT",
       "optional": true,
       "os": [
@@ -986,9 +977,6 @@
       "integrity": "sha512-pc9EYOSlOgdQ2uPl1o9PF6/kLSgaUosia7gOuS8mB69IxJvlclko1MECXysjs5ryez1/5zjYqx3+xYU0TU6R1A==",
       "cpu": [
         "arm64"
-      ],
-      "libc": [
-        "musl"
       ],
       "license": "MIT",
       "optional": true,
@@ -1003,9 +991,6 @@
       "cpu": [
         "loong64"
       ],
-      "libc": [
-        "glibc"
-      ],
       "license": "MIT",
       "optional": true,
       "os": [
@@ -1018,9 +1003,6 @@
       "integrity": "sha512-nbJnQ8a3z1mtmrwImCYhc6BGpThAyYVRQxw9uKSKG4wR6aAYno9sVjJ0zaZcW9BPJX1GbrDPf+SvdWjgTuDmnw==",
       "cpu": [
         "loong64"
-      ],
-      "libc": [
-        "musl"
       ],
       "license": "MIT",
       "optional": true,
@@ -1035,9 +1017,6 @@
       "cpu": [
         "ppc64"
       ],
-      "libc": [
-        "glibc"
-      ],
       "license": "MIT",
       "optional": true,
       "os": [
@@ -1050,9 +1029,6 @@
       "integrity": "sha512-WeBtoMuaMxiiIrO2IYP3xs6GMWkJP2C0EoT8beTLkUPmzV1i/UcOSVw1d5r9KBODtHKilG5yFxsGRnBbK3wJ4A==",
       "cpu": [
         "ppc64"
-      ],
-      "libc": [
-        "musl"
       ],
       "license": "MIT",
       "optional": true,
@@ -1067,9 +1043,6 @@
       "cpu": [
         "riscv64"
       ],
-      "libc": [
-        "glibc"
-      ],
       "license": "MIT",
       "optional": true,
       "os": [
@@ -1083,9 +1056,6 @@
       "cpu": [
         "riscv64"
       ],
-      "libc": [
-        "musl"
-      ],
       "license": "MIT",
       "optional": true,
       "os": [
@@ -1098,9 +1068,6 @@
       "integrity": "sha512-ynt3JxVd2w2buzoKDWIyiV1pJW93xlQic1THVLXilz429oijRpSHivZAgp65KBu+cMcgf1eVVjdnTLvPxgCuoQ==",
       "cpu": [
         "s390x"
-      ],
-      "libc": [
-        "glibc"
       ],
       "license": "MIT",
       "optional": true,
@@ -1337,9 +1304,6 @@
       "cpu": [
         "arm64"
       ],
-      "libc": [
-        "glibc"
-      ],
       "license": "MIT",
       "optional": true,
       "os": [
@@ -1355,9 +1319,6 @@
       "integrity": "sha512-Z6sukiQsngnWO+l39X4pPbiWT81IC+PLKF+PHxIlyZbGNb9MODfYlXEVlFvej5BOZInWX01kVyzeLvHsXhfczQ==",
       "cpu": [
         "arm64"
-      ],
-      "libc": [
-        "musl"
       ],
       "license": "MIT",
       "optional": true,
@@ -2892,9 +2853,6 @@
       "cpu": [
         "arm64"
       ],
-      "libc": [
-        "glibc"
-      ],
       "license": "MPL-2.0",
       "optional": true,
       "os": [
@@ -2914,9 +2872,6 @@
       "integrity": "sha512-UpQkoenr4UJEzgVIYpI80lDFvRmPVg6oqboNHfoH4CQIfNA+HOrZ7Mo7KZP02dC6LjghPQJeBsvXhJod/wnIBg==",
       "cpu": [
         "arm64"
-      ],
-      "libc": [
-        "musl"
       ],
       "license": "MPL-2.0",
       "optional": true,

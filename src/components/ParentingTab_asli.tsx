@@ -100,7 +100,7 @@ export default function ParentingTab({ db, role, sessionToken, onRefresh }: Pare
       <div className="bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent border border-indigo-100/50 rounded-2xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
           <span className="text-[10px] text-indigo-600 font-bold uppercase tracking-widest block">Fitur Pendukung</span>
-          <h3 className="text-sm font-bold text-slate-900">Tips Orang Tua SIKOWALI</h3>
+          <h3 className="text-sm font-bold text-slate-900">Ruang Parenting SIKOWALI</h3>
           <p className="text-xs text-slate-500">Membantu menyelaraskan bimbingan akademis sekolah dengan pola asuh nyaman penuh empati di rumah.</p>
         </div>
         <div className="px-3 py-1.5 bg-white border border-indigo-100 rounded-xl text-xs font-semibold text-indigo-800 flex items-center gap-1.5 shrink-0">

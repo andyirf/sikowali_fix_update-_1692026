@@ -170,8 +170,8 @@ export default function InputAbsensiTab({ db, onUpdateAttendance, onUpdateAttend
     <div className="space-y-6 max-w-4xl mx-auto animate-fade-in select-none">
       <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center bg-white border border-slate-100 p-4 rounded-xl shadow-sm">
         <div>
-          <h3 className="text-sm font-bold text-slate-900">Isi Kehadiran Harian & Semester</h3>
-          <p className="text-xs text-slate-500">Pilih mode harian atau rekap semester sesuai kebutuhan pengisian kehadiran.</p>
+          <h3 className="text-sm font-bold text-slate-900">Input Absensi Harian & Semester</h3>
+          <p className="text-xs text-slate-500">Pilih mode harian atau rekap semester sesuai kebutuhan input absensi.</p>
         </div>
         <button
           onClick={handleSave}
@@ -179,14 +179,14 @@ export default function InputAbsensiTab({ db, onUpdateAttendance, onUpdateAttend
           className="flex items-center gap-1.5 bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 disabled:opacity-50 transition-all text-xs px-4 py-2 rounded-xl h-9 cursor-pointer"
         >
           <Save className="w-4 h-4" />
-          {saving ? "Menyimpan..." : inputMode === "semester" ? "Simpan Rekap Semester" : "Simpan Kehadiran"}
+          {saving ? "Menyimpan..." : inputMode === "semester" ? "Simpan Rekap Semester" : "Simpan Absensi"}
         </button>
       </div>
 
       {success && (
         <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs p-3 rounded-xl flex items-center gap-2.5">
           <CheckCircle className="w-5 h-5 text-emerald-500" />
-          <p className="font-bold">Berhasil! Data kehadiran tersimpan dan rekap diperbarui otomatis.</p>
+          <p className="font-bold">Berhasil! Data absensi tersimpan dan rekap diperbarui otomatis.</p>
         </div>
       )}
 
@@ -214,8 +214,8 @@ export default function InputAbsensiTab({ db, onUpdateAttendance, onUpdateAttend
 
         <div className="inline-flex bg-slate-50 border border-slate-200 rounded-xl p-1">
           {[
-            { id: "harian", label: "Isi Harian" },
-            { id: "semester", label: "Isi Rekap Semester" },
+            { id: "harian", label: "Input Harian" },
+            { id: "semester", label: "Input Rekap Semester" },
           ].map((mode) => (
             <button
               key={mode.id}

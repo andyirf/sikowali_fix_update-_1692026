@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Award, CalendarDays, Clock, Download, FileText, Printer, RefreshCw, UserRound, UsersRound } from "lucide-react";
+import { Award, CalendarDays, Download, FileText, Printer, RefreshCw, UserRound, UsersRound } from "lucide-react";
 import { AttendanceRecord, BehaviourLog, SIKOWALIDatabase, Student, StudentScoreDetail, SubjectScore } from "../types";
-import { formatLastUpdated, latestUpdatedAt } from "../utils/lastUpdated";
 
 interface RekapSemesterTabProps {
   db: SIKOWALIDatabase;
@@ -56,7 +55,7 @@ function printPdf() {
   printWindow.document.write(`<!doctype html>
     <html>
       <head>
-        <title>Laporan Semester</title>
+        <title>Rekap Semester</title>
         ${styles}
         <style>
           @page { size: A4; margin: 10mm; }
@@ -138,12 +137,6 @@ export default function RekapSemesterTab({ db, sessionToken, onSelectStudent }: 
   const attendanceSummary = attendanceData;
   const totalAttendance = attendanceData.totalDays;
   const attendancePercent = attendanceData.percent;
-  const scoreLastUpdated = latestUpdatedAt([
-    ...semesterScoreDetails.map((item) => item.updatedAt),
-    ...db.scores.map((item) => item.updatedAt),
-  ]);
-  const attendanceLastUpdated = latestUpdatedAt(semesterAttendance.map((item) => item.updatedAt));
-  const reportLastUpdated = latestUpdatedAt([scoreLastUpdated, attendanceLastUpdated]);
 
   useEffect(() => {
     setSemester(defaultReportSemester(db));
@@ -178,11 +171,7 @@ export default function RekapSemesterTab({ db, sessionToken, onSelectStudent }: 
     });
     const classAverage = rows.length ? Math.round(rows.reduce((sum, item) => sum + item.avg, 0) / rows.length) : 0;
     const classAttendance = rows.length ? Math.round(rows.reduce((sum, item) => sum + item.abs.percent, 0) / rows.length) : 0;
-    const classLastUpdated = latestUpdatedAt(rows.flatMap((item) => [
-      ...item.scores.map((score) => score.updatedAt),
-      ...item.attendance.map((attendance) => attendance.updatedAt),
-    ]));
-    return { rows, classAverage, classAttendance, classLastUpdated };
+    return { rows, classAverage, classAttendance };
   }, [classReports, semester]);
 
   const conclusion = useMemo(() => {
@@ -197,7 +186,7 @@ export default function RekapSemesterTab({ db, sessionToken, onSelectStudent }: 
       <div className="print:hidden bg-white border border-slate-100 rounded-2xl p-5 shadow-sm space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <h3 className="text-sm font-bold text-slate-900">Laporan Semester</h3>
+            <h3 className="text-sm font-bold text-slate-900">Rekap Semester</h3>
             <p className="text-xs text-slate-500 mt-1">Ringkasan nilai, absensi, dan catatan perilaku siswa aktif untuk arsip wali kelas.</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2">
@@ -262,12 +251,8 @@ export default function RekapSemesterTab({ db, sessionToken, onSelectStudent }: 
             <div />
           </div>
           <div className="text-center mt-4">
-            <h2 className="text-base font-black uppercase tracking-wide text-slate-950">Laporan Semester {mode === "class" ? "Kelas" : "Siswa"}</h2>
+            <h2 className="text-base font-black uppercase tracking-wide text-slate-950">Laporan Rekap Semester {mode === "class" ? "Kelas" : "Siswa"}</h2>
             <p className="text-xs font-bold text-slate-600">Semester {semester} • Tahun Ajaran {academicYear}</p>
-            <p className="mt-1 inline-flex items-center justify-center gap-1.5 text-[10px] font-bold text-slate-500">
-              <Clock className="w-3.5 h-3.5 text-emerald-600" />
-              Last Updated: {formatLastUpdated(mode === "class" ? classSummary.classLastUpdated : reportLastUpdated)}
-            </p>
           </div>
         </div>
 
@@ -281,7 +266,6 @@ export default function RekapSemesterTab({ db, sessionToken, onSelectStudent }: 
             rows={classSummary.rows}
             classAverage={classSummary.classAverage}
             classAttendance={classSummary.classAttendance}
-            lastUpdated={classSummary.classLastUpdated}
           />
         ) : (
           <>
@@ -369,13 +353,7 @@ export default function RekapSemesterTab({ db, sessionToken, onSelectStudent }: 
         </div>
 
         <div className="space-y-3 pdf-section">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-            <h2 className="text-sm font-black text-slate-900">Ringkasan Nilai Mata Pelajaran</h2>
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
-              <Clock className="w-3.5 h-3.5 text-emerald-600" />
-              Last Updated: {formatLastUpdated(scoreLastUpdated)}
-            </span>
-          </div>
+          <h2 className="text-sm font-black text-slate-900">Ringkasan Nilai Mata Pelajaran</h2>
           <Table>
             <thead>
               <tr>
@@ -405,13 +383,7 @@ export default function RekapSemesterTab({ db, sessionToken, onSelectStudent }: 
         </div>
 
         <div className="space-y-3 pdf-section">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-            <h2 className="text-sm font-black text-slate-900">Rekap Absensi Semester</h2>
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
-              <Clock className="w-3.5 h-3.5 text-emerald-600" />
-              Last Updated: {formatLastUpdated(attendanceLastUpdated)}
-            </span>
-          </div>
+          <h2 className="text-sm font-black text-slate-900">Rekap Absensi Semester</h2>
           <div className="grid grid-cols-5 border border-slate-200 rounded-xl overflow-hidden">
             <AttendanceStat label="Hadir" value={attendanceSummary.hadir} tone="emerald" />
             <AttendanceStat label="Sakit" value={attendanceSummary.sakit} tone="amber" />
@@ -507,7 +479,7 @@ export default function RekapSemesterTab({ db, sessionToken, onSelectStudent }: 
   );
 }
 
-function ClassReportView({ db, semester, loading, onReload, rows, classAverage, classAttendance, lastUpdated }: { db: SIKOWALIDatabase; semester: "Ganjil" | "Genap"; loading: boolean; onReload: () => void; rows: Array<ClassReportItem & { avg: number; abs: ReturnType<typeof summarizeAttendance>; below: number; notes: number }>; classAverage: number; classAttendance: number; lastUpdated: Date | null }) {
+function ClassReportView({ db, semester, loading, onReload, rows, classAverage, classAttendance }: { db: SIKOWALIDatabase; semester: "Ganjil" | "Genap"; loading: boolean; onReload: () => void; rows: Array<ClassReportItem & { avg: number; abs: ReturnType<typeof summarizeAttendance>; below: number; notes: number }>; classAverage: number; classAttendance: number }) {
   return (
     <div className="space-y-5">
       <div className="grid md:grid-cols-4 gap-3">
@@ -522,13 +494,7 @@ function ClassReportView({ db, semester, loading, onReload, rows, classAverage, 
         </div>
       </div>
       <div className="space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-          <h2 className="text-sm font-black text-slate-900">Laporan Satu Kelas</h2>
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
-            <Clock className="w-3.5 h-3.5 text-emerald-600" />
-            Last Updated: {formatLastUpdated(lastUpdated)}
-          </span>
-        </div>
+        <h2 className="text-sm font-black text-slate-900">Rekap Satu Kelas</h2>
         <Table>
           <thead>
             <tr>

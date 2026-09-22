@@ -80,6 +80,144 @@
   75% { transform: translateX(4px); }
 }
 
+.accessibility-comfort {
+  text-size-adjust: 100%;
+}
+
+.accessibility-comfort .text-\[9px\],
+.accessibility-comfort .text-\[10px\] {
+  font-size: 0.75rem !important;
+  line-height: 1.05rem !important;
+}
+
+.accessibility-comfort .text-\[11px\],
+.accessibility-comfort .text-xs {
+  font-size: 0.8125rem !important;
+  line-height: 1.25rem !important;
+}
+
+.accessibility-comfort button,
+.accessibility-comfort input,
+.accessibility-comfort select,
+.accessibility-comfort textarea,
+.accessibility-comfort a {
+  min-height: 2.25rem;
+}
+
+.accessibility-comfort button:focus-visible,
+.accessibility-comfort input:focus-visible,
+.accessibility-comfort select:focus-visible,
+.accessibility-comfort textarea:focus-visible,
+.accessibility-comfort a:focus-visible {
+  outline: 3px solid #facc15 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 5px rgba(15, 23, 42, 0.18) !important;
+}
+
+.high-contrast body,
+.high-contrast .portal-app-bg {
+  background: #ffffff !important;
+  color: #020617 !important;
+}
+
+.high-contrast aside,
+.high-contrast #app-sidebar {
+  background: #052e16 !important;
+}
+
+.high-contrast header,
+.high-contrast #app-header,
+.high-contrast .portal-panel,
+.high-contrast .portal-soft-card,
+.high-contrast .bg-white,
+.high-contrast .bg-white\/85,
+.high-contrast .bg-white\/90,
+.high-contrast .bg-slate-50,
+.high-contrast .bg-slate-50\/20,
+.high-contrast .bg-slate-50\/30,
+.high-contrast .bg-slate-50\/80,
+.high-contrast .bg-slate-50\/90 {
+  background-color: #ffffff !important;
+}
+
+.high-contrast .text-slate-300,
+.high-contrast .text-slate-400,
+.high-contrast .text-slate-500,
+.high-contrast .text-slate-600,
+.high-contrast .text-emerald-50\/80,
+.high-contrast .text-emerald-50\/85,
+.high-contrast .text-emerald-100\/65,
+.high-contrast .text-emerald-100\/70 {
+  color: #1e293b !important;
+}
+
+.high-contrast aside .text-emerald-50\/80,
+.high-contrast aside .text-emerald-100\/60,
+.high-contrast aside .text-emerald-100\/65,
+.high-contrast aside .text-emerald-100\/70,
+.high-contrast aside .text-emerald-100\/80 {
+  color: #ffffff !important;
+}
+
+.high-contrast .text-slate-700,
+.high-contrast .text-slate-800,
+.high-contrast .text-slate-900 {
+  color: #020617 !important;
+}
+
+.high-contrast .border,
+.high-contrast .border-slate-100,
+.high-contrast .border-slate-200,
+.high-contrast .border-white\/70,
+.high-contrast .border-emerald-100,
+.high-contrast .border-emerald-200 {
+  border-color: #334155 !important;
+}
+
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+  background-color: #ffffff !important;
+  border-color: #334155 !important;
+  color: #020617 !important;
+}
+
+.high-contrast input::placeholder,
+.high-contrast textarea::placeholder {
+  color: #475569 !important;
+  opacity: 1 !important;
+}
+
+.high-contrast .shadow,
+.high-contrast .shadow-sm,
+.high-contrast .shadow-md,
+.high-contrast .shadow-lg,
+.high-contrast .shadow-xl,
+.high-contrast .shadow-2xl {
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.2) !important;
+}
+
+.high-contrast .bg-emerald-500 {
+  background-color: #047857 !important;
+  color: #ffffff !important;
+}
+
+.high-contrast .bg-yellow-400 {
+  background-color: #fde047 !important;
+  color: #020617 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @media print {
   body {
     background: #ffffff !important;

@@ -21,14 +21,11 @@ import HakAksesTab from "./components/HakAksesTab";
 import ManajemenTab from "./components/ManajemenTab";
 import SettingAITab from "./components/SettingAITab";
 import DataSekolahTab from "./components/DataSekolahTab";
-import OnboardingGuide from "./components/OnboardingGuide";
 
 import { Role, SIKOWALIDatabase, SubjectScore, AttendanceRecord, AttendanceStatus, Announcement, SchoolSettings, User as PortalUser, DisciplineType } from "./types";
-import { Sparkles, BookOpen, ArrowRight, Lock, Search, Table2, GraduationCap, Phone, X, Eye, EyeOff } from "lucide-react";
+import { Sparkles, BookOpen, LogOut, CheckCircle, HelpCircle, ArrowRight, Activity, Smile, User, Lock, MessageSquare, Search, Table2, GraduationCap, Phone, X, Eye, EyeOff } from "lucide-react";
 
 const LAST_ACTIVITY_KEY = "sikowali:last-activity";
-const ONBOARDING_SEEN_KEY_PREFIX = "sikowali:onboarding-seen:";
-const HIGH_CONTRAST_KEY = "sikowali:high-contrast";
 const IDLE_LOGOUT_MS = 10 * 60 * 1000;
 const KEEP_ALIVE_INTERVAL_MS = 60 * 1000;
 const LOGIN_COUNTDOWN_INTERVAL_MS = 1000;
@@ -98,14 +95,6 @@ export default function App() {
   const [showStudentTable, setShowStudentTable] = useState(false);
   const [showStudentDataFromTable, setShowStudentDataFromTable] = useState(false);
   const [studentTablePage, setStudentTablePage] = useState(1);
-  const [showOnboardingGuide, setShowOnboardingGuide] = useState(false);
-  const [highContrast, setHighContrast] = useState(() => {
-    try {
-      return localStorage.getItem(HIGH_CONTRAST_KEY) === "true";
-    } catch {
-      return false;
-    }
-  });
   const normalizedLoginUsername = loginUsername.trim().toLowerCase();
   const loginLockRemainingMs = loginLock?.username === normalizedLoginUsername ? Math.max(0, loginLock.until - loginCountdownNow) : 0;
   const loginLockSeconds = Math.ceil(loginLockRemainingMs / 1000);
@@ -133,16 +122,6 @@ export default function App() {
       })
       .catch(() => undefined);
   }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.add("accessibility-comfort");
-    document.documentElement.classList.toggle("high-contrast", highContrast);
-    try {
-      localStorage.setItem(HIGH_CONTRAST_KEY, String(highContrast));
-    } catch {
-      undefined;
-    }
-  }, [highContrast]);
 
   useEffect(() => {
     if (!loginLock) return;
@@ -203,17 +182,6 @@ export default function App() {
       showStudentDataFromTable,
     }));
   }, [isLoggedIn, currentUser, currentTab, selectedStudentId, selectedClassName, showStudentTable, showStudentDataFromTable]);
-
-  useEffect(() => {
-    if (!isLoggedIn || !currentUser) return;
-    const key = `${ONBOARDING_SEEN_KEY_PREFIX}${currentUser.id}`;
-    if (!localStorage.getItem(key)) setShowOnboardingGuide(true);
-  }, [isLoggedIn, currentUser]);
-
-  const closeOnboardingGuide = () => {
-    if (currentUser) localStorage.setItem(`${ONBOARDING_SEEN_KEY_PREFIX}${currentUser.id}`, "true");
-    setShowOnboardingGuide(false);
-  };
 
   useEffect(() => {
     if (!isLoggedIn || !currentUser) return;
@@ -491,25 +459,25 @@ export default function App() {
   const getTabLabel = () => {
     switch (currentTab) {
       case "beranda": return "Beranda";
-      case "rapor": return "Nilai Anak";
-      case "absensi": return "Kehadiran";
-      case "catatan": return "Catatan Guru";
-      case "karya": return "Karya Anak";
-      case "analisisAI": return "Analisis Perkembangan";
-      case "chatbot": return "Tanya SIKOWALI";
-      case "backupChatbot": return "Arsip Percakapan AI";
+      case "rapor": return "Nilai & Rapor";
+      case "absensi": return "Kehadiran Murid";
+      case "catatan": return "Catatan Perilaku";
+      case "karya": return "Dokumentasi & Karya";
+      case "analisisAI": return "Analisis AI";
+      case "chatbot": return "Chatbot SIKOWALI";
+      case "backupChatbot": return "Backup Chatbot AI";
       case "notifikasi": return "Notifikasi";
       case "pengumuman": return "Pengumuman Sekolah";
-      case "parenting": return "Tips Orang Tua";
-      case "wall": return "Masukan Wali Murid";
-      case "inputNilai": return "Isi Nilai";
-      case "inputAbsensi": return "Isi Kehadiran";
-      case "rekapSemester": return "Laporan Semester";
+      case "parenting": return "Ruang Parenting";
+      case "wall": return "Masukkan Wall";
+      case "inputNilai": return "Input Nilai";
+      case "inputAbsensi": return "Input Absensi";
+      case "rekapSemester": return "Rekap Semester";
       case "profil": return "Profil Wali Murid";
-      case "hakAkses": return "Hak Akses Pengguna";
-      case "settingAI": return "Pengaturan AI";
+      case "hakAkses": return "Matriks Otorisasi & Hak Akses";
+      case "settingAI": return "Setting AI";
       case "dataSekolah": return "Data Sekolah";
-      case "manajemen": return "Kelola Data";
+      case "manajemen": return "Manajemen Data";
       default: return "SIKOWALI";
     }
   };
@@ -882,9 +850,6 @@ export default function App() {
           isUsingPostgreSQL={(db as any)?.isUsingPostgreSQL}
           displayName={db?.currentUser?.name}
           onOpenProfile={() => setCurrentTab("profil")}
-          onOpenGuide={() => setShowOnboardingGuide(true)}
-          highContrast={highContrast}
-          onToggleHighContrast={() => setHighContrast((value) => !value)}
           onLogout={() => handleLogout()}
         />
         
@@ -1061,14 +1026,6 @@ export default function App() {
           {showStudentSelectorPanel && canSelectStudents && showStudentTable && !showStudentDataFromTable ? null : renderTabContent()}
         </main>
       </div>
-      <OnboardingGuide
-        role={selectedRole}
-        isOpen={showOnboardingGuide}
-        onClose={closeOnboardingGuide}
-        onNavigate={(tab) => {
-          if (canAccessTab(tab, selectedRole)) setCurrentTab(tab);
-        }}
-      />
     </div>
   );
 }

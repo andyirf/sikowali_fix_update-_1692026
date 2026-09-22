@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Bot, Trash2, AlertCircle, Info } from "lucide-react";
+import { Send, Bot, Trash2, AlertCircle } from "lucide-react";
 import { AIChatQuota } from "../types";
 
 interface ChatMessage {
@@ -91,8 +91,8 @@ export default function ChatbotTab({ db, sessionToken }: { db: any; sessionToken
       {/* Bot top header card */}
       <div className="bg-slate-950 px-5 py-4 flex items-center justify-between border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center font-bold text-slate-950 relative" title="SKO AI membantu menjawab pertanyaan berdasarkan data portal SIKOWALI.">
-            <Bot className="w-5 h-5" aria-hidden="true" />
+          <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center font-bold text-slate-950 relative">
+            <Bot className="w-5 h-5" />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-slate-950 rounded-full animate-ping" />
             <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-slate-950 rounded-full" />
           </div>
@@ -104,8 +104,7 @@ export default function ChatbotTab({ db, sessionToken }: { db: any; sessionToken
         <button
           onClick={clearChat}
           className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-900 rounded-xl transition-all"
-          title="Hapus percakapan yang sedang tampil dan mulai sesi baru."
-          aria-label="Hapus percakapan yang sedang tampil."
+          title="Hapus Sesi Obrolan"
         >
           <Trash2 className="w-4 h-4" />
         </button>
@@ -155,10 +154,6 @@ export default function ChatbotTab({ db, sessionToken }: { db: any; sessionToken
 
       {/* Suggestions and text writing panel */}
       <div className="p-4 border-t border-slate-100 bg-white space-y-3 shrink-0">
-        <div className="flex items-start gap-2 rounded-xl bg-slate-50 border border-slate-100 px-3 py-2 text-[11px] font-semibold text-slate-600">
-          <Info className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" aria-hidden="true" />
-          Tanya SIKOWALI dapat membantu menjelaskan informasi sekolah dan data anak. Untuk keputusan resmi, tetap rujuk wali kelas atau pengumuman sekolah.
-        </div>
         {quota && (
           <div className={`flex items-center justify-between gap-3 px-3 py-2 rounded-lg border text-[10px] font-bold ${
             quota.remaining === 0
@@ -167,7 +162,7 @@ export default function ChatbotTab({ db, sessionToken }: { db: any; sessionToken
                 ? "bg-amber-50 border-amber-200 text-amber-700"
                 : "bg-emerald-50 border-emerald-100 text-emerald-700"
           }`}>
-            <span className="flex items-center gap-1.5" title="Jumlah pertanyaan AI yang masih bisa digunakan bulan ini."><AlertCircle className="w-3.5 h-3.5" /> Sisa kuota AI bulan ini</span>
+            <span className="flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5" /> Sisa kuota AI bulan ini</span>
             <span>{quota.remaining} dari {quota.limit} pertanyaan</span>
           </div>
         )}
@@ -178,7 +173,6 @@ export default function ChatbotTab({ db, sessionToken }: { db: any; sessionToken
               key={idx}
               onClick={() => handleSendMessage(chip)}
               disabled={loading || quotaExhausted}
-              title={`Kirim contoh pertanyaan: ${chip}`}
               className="px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 transition-all border border-slate-200/60 hover:border-emerald-200 text-slate-600 text-[10px] font-bold rounded-full whitespace-nowrap cursor-pointer"
             >
               {chip}
@@ -201,14 +195,11 @@ export default function ChatbotTab({ db, sessionToken }: { db: any; sessionToken
             onChange={(e) => setUserInput(e.target.value)}
             maxLength={500}
             disabled={loading || quotaExhausted}
-            title="Tulis pertanyaan tentang nilai, kehadiran, pengumuman, atau bimbingan anak."
             className="flex-1 bg-slate-50 border border-slate-200 focus:border-emerald-500 px-4 py-2.5 rounded-xl text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/10 transition-all font-medium"
           />
           <button
             type="submit"
             disabled={!userInput.trim() || loading || quotaExhausted}
-            title="Kirim pertanyaan ke SKO AI."
-            aria-label="Kirim pertanyaan ke SKO AI"
             className="px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 hover:shadow disabled:opacity-50 font-bold transition-all rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer"
           >
             <Send className="w-3.5 h-3.5" />

@@ -261,8 +261,8 @@ export default function ManajemenTab({ db, role, sessionToken, onRefresh }: Mana
       <div className="bg-white border border-slate-100 rounded-xl p-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center gap-3">
           <div className="flex-1">
-            <h3 className="text-sm font-black text-slate-900">Kelola Data</h3>
-            <p className="text-xs text-slate-500 font-medium">Pilih sub-menu, isi form, lalu kelola data lewat tabel ubah, hapus, dan aktif/nonaktif.</p>
+            <h3 className="text-sm font-black text-slate-900">Manajemen Data</h3>
+            <p className="text-xs text-slate-500 font-medium">Pilih sub-menu, isi form, lalu kelola data lewat tabel edit, delete, dan enable/disable.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             {isAdminLike && (

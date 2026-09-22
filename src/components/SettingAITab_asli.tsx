@@ -108,8 +108,8 @@ export default function SettingAITab({ db, sessionToken, onRefresh }: SettingAIT
         body: JSON.stringify(form),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal menyimpan pengaturan AI.");
-      setMessage("Pengaturan AI berhasil disimpan ke database.");
+      if (!res.ok) throw new Error(data.error || "Gagal menyimpan setting AI.");
+      setMessage("Setting AI berhasil disimpan ke database.");
       await onRefresh();
     } catch (err: any) {
       setMessage(err.message);
@@ -141,10 +141,10 @@ export default function SettingAITab({ db, sessionToken, onRefresh }: SettingAIT
       <div className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center gap-4">
           <div className="p-3 rounded-xl bg-emerald-500 text-slate-950 w-fit">
-            <Sparkles className="w-5 h-5" aria-hidden="true" />
+            <Sparkles className="w-5 h-5" />
           </div>
           <div className="flex-1">
-            <h3 className="font-black text-slate-900">Pengaturan AI</h3>
+            <h3 className="font-black text-slate-900">Setting AI</h3>
             <p className="text-xs text-slate-500 font-medium">Admin memilih platform AI, model, env API key, base URL, dan status aktivasi. API key tetap aman di file `.env`.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -156,7 +156,6 @@ export default function SettingAITab({ db, sessionToken, onRefresh }: SettingAIT
                 type="button"
                 onClick={restartApp}
                 disabled={restarting}
-                title="Restart diperlukan jika konfigurasi server berubah dan aplikasi perlu memuat ulang environment."
                 className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-red-50 text-red-700 border border-red-100 text-xs font-black hover:bg-red-100 disabled:opacity-50"
               >
                 <RefreshCw className={`w-4 h-4 ${restarting ? "animate-spin" : ""}`} />
@@ -176,7 +175,7 @@ export default function SettingAITab({ db, sessionToken, onRefresh }: SettingAIT
 
       <form onSubmit={submit} className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm space-y-4">
         <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
-          <span className="p-2 rounded-xl bg-slate-900 text-white" title="Konfigurasi ini menentukan layanan AI yang dipakai portal."><SlidersHorizontal className="w-4 h-4" /></span>
+          <span className="p-2 rounded-xl bg-slate-900 text-white"><SlidersHorizontal className="w-4 h-4" /></span>
           <div>
             <h4 className="text-sm font-bold text-slate-900">Konfigurasi Platform AI</h4>
             <p className="text-xs text-slate-500">Sesuaikan provider dengan API key yang tersedia di `.env`, misalnya `GEMINI_API_KEY`, `OPENAI_API_KEY`, `OPENROUTER_API_KEY`, atau `ANTHROPIC_API_KEY`.</p>
@@ -186,49 +185,48 @@ export default function SettingAITab({ db, sessionToken, onRefresh }: SettingAIT
         <div className="grid md:grid-cols-2 gap-3">
           <label className="space-y-1.5">
             <span className="block text-[10px] font-black uppercase tracking-wider text-slate-500">Platform AI</span>
-            <select value={form.provider} onChange={(e) => changeProvider(e.target.value)} title="Pilih penyedia layanan AI yang API key-nya tersedia di server." className="input-field">
+            <select value={form.provider} onChange={(e) => changeProvider(e.target.value)} className="input-field">
               {providerOptions.map((provider) => <option key={provider.value} value={provider.value}>{provider.label}</option>)}
             </select>
           </label>
           <label className="space-y-1.5">
             <span className="block text-[10px] font-black uppercase tracking-wider text-slate-500">Model</span>
-            <select value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} title="Pilih model AI untuk menjawab chat dan membuat analisis perkembangan." className="input-field">
+            <select value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} className="input-field">
               {selectedProvider.models.map((model) => <option key={model.value} value={model.value}>{model.label} - {model.value}</option>)}
             </select>
           </label>
           {form.provider === "Custom" && (
             <label className="md:col-span-2 space-y-1.5">
               <span className="block text-[10px] font-black uppercase tracking-wider text-slate-500">Nama Model Custom</span>
-              <input value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} title="Isi nama model sesuai server AI custom yang digunakan." className="input-field" placeholder="Contoh: llama3.1, qwen2.5, atau model server lokal" />
+              <input value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} className="input-field" placeholder="Contoh: llama3.1, qwen2.5, atau model server lokal" />
             </label>
           )}
           <label className="space-y-1.5">
             <span className="block text-[10px] font-black uppercase tracking-wider text-slate-500">Nama ENV API Key</span>
-            <input value={form.apiKeyEnv} onChange={(e) => setForm({ ...form, apiKeyEnv: e.target.value })} title="Nama variabel environment tempat API key disimpan, bukan isi API key." className="input-field" placeholder="Contoh: OPENAI_API_KEY" />
+            <input value={form.apiKeyEnv} onChange={(e) => setForm({ ...form, apiKeyEnv: e.target.value })} className="input-field" placeholder="Contoh: OPENAI_API_KEY" />
           </label>
           <label className="space-y-1.5">
             <span className="block text-[10px] font-black uppercase tracking-wider text-slate-500">Base URL</span>
-            <input value={form.baseUrl} onChange={(e) => setForm({ ...form, baseUrl: e.target.value })} title="Alamat endpoint AI. Kosongkan bila provider memakai endpoint bawaan." className="input-field" placeholder="Kosongkan untuk default provider" />
+            <input value={form.baseUrl} onChange={(e) => setForm({ ...form, baseUrl: e.target.value })} className="input-field" placeholder="Kosongkan untuk default provider" />
           </label>
           <div className="md:col-span-2 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 font-semibold">
             {selectedModel?.description || "Model custom tersimpan dari database. Pastikan provider/base URL mendukung model tersebut."}
           </div>
           <label className="md:col-span-2 flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700">
-            <input type="checkbox" checked={form.enabled} onChange={(e) => setForm({ ...form, enabled: e.target.checked })} title="Matikan centang untuk menonaktifkan fitur AI di portal." className="accent-emerald-600" />
+            <input type="checkbox" checked={form.enabled} onChange={(e) => setForm({ ...form, enabled: e.target.checked })} className="accent-emerald-600" />
             Aktifkan fitur AI di portal yang punya akses
           </label>
           <textarea
             value={form.systemPrompt}
             onChange={(e) => setForm({ ...form, systemPrompt: e.target.value })}
             className="input-field md:col-span-2 min-h-32"
-            title="Instruksi gaya bahasa dan batasan jawaban yang dipakai AI."
             placeholder="Instruksi sistem AI"
           />
         </div>
 
-        <button disabled={saving} title="Simpan konfigurasi AI ke database." className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold disabled:opacity-50 hover:bg-slate-800">
+        <button disabled={saving} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold disabled:opacity-50 hover:bg-slate-800">
           <Save className="w-4 h-4" />
-          {saving ? "Menyimpan..." : "Simpan Pengaturan AI"}
+          {saving ? "Menyimpan..." : "Simpan Setting AI"}
         </button>
       </form>
     </div>

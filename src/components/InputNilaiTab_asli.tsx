@@ -227,7 +227,7 @@ export default function InputNilaiTab({ db, sessionToken, onSelectStudent, onRef
     <div className="space-y-6 max-w-6xl mx-auto animate-fade-in select-none">
       <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center bg-white border border-slate-100 p-4 rounded-xl shadow-sm">
         <div>
-          <h3 className="text-sm font-bold text-slate-900">Isi Nilai & Evaluasi</h3>
+          <h3 className="text-sm font-bold text-slate-900">Input Nilai & Evaluasi</h3>
           <p className="text-xs text-slate-500">Tampilan dan penyimpanan nilai memakai data student_score_details.</p>
         </div>
       </div>

@@ -79,7 +79,7 @@ export default function CatatanTab({ db, role, onAddBehaviour }: CatatanTabProps
       <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
-            <h3 className="text-sm font-bold text-slate-900">Sumber Catatan Guru</h3>
+            <h3 className="text-sm font-bold text-slate-900">Sumber Catatan Perilaku</h3>
             <p className="text-xs text-slate-500 mt-1">Setiap catatan menyimpan nama pelapor dan portal asal input data.</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -99,7 +99,7 @@ export default function CatatanTab({ db, role, onAddBehaviour }: CatatanTabProps
         <form onSubmit={handleSubmit} className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
-              <h3 className="text-sm font-bold text-slate-900">Tambah Catatan Guru</h3>
+              <h3 className="text-sm font-bold text-slate-900">Tambah Catatan Perilaku</h3>
               <p className="text-xs text-slate-500 mt-1">Catatan akan masuk sebagai input dari {sourcePortal}.</p>
             </div>
             <span className="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-600">
@@ -110,7 +110,7 @@ export default function CatatanTab({ db, role, onAddBehaviour }: CatatanTabProps
           {success && (
             <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs p-3 rounded-xl flex items-center gap-2.5">
               <CheckCircle className="w-5 h-5 text-emerald-500" />
-              <p className="font-bold">Catatan guru berhasil disimpan.</p>
+              <p className="font-bold">Catatan perilaku berhasil disimpan.</p>
             </div>
           )}
           <div className="grid md:grid-cols-[220px_1fr] gap-3">
@@ -141,7 +141,7 @@ export default function CatatanTab({ db, role, onAddBehaviour }: CatatanTabProps
       )}
 
       <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm space-y-6">
-        <h3 className="text-sm font-bold text-slate-900">Riwayat Catatan Guru & Kedisiplinan</h3>
+        <h3 className="text-sm font-bold text-slate-900">Riwayat Catatan Perilaku & Kedisiplinan</h3>
 
         <div className="relative border-l border-slate-100 pl-6 ml-4 space-y-6">
           {behaviour.map((item) => {

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Search, Info, TrendingUp, AlertTriangle, Clock } from "lucide-react";
+import { Search, Info, TrendingUp, AlertTriangle } from "lucide-react";
 import { SIKOWALIDatabase, StudentScoreDetail } from "../types";
-import { formatLastUpdated, latestUpdatedAt } from "../utils/lastUpdated";
 
 interface RaporTabProps {
   db: SIKOWALIDatabase;
@@ -62,10 +61,6 @@ export default function RaporTab({ db }: RaporTabProps) {
   });
   const filteredScores = scores.filter((s) => s.subject.toLowerCase().includes(searchTerm.toLowerCase()));
   const subjectSummaries = uniqueSubjectSummaries(scoreDetails, scores);
-  const lastUpdated = latestUpdatedAt([
-    ...scoreDetails.map((detail) => detail.updatedAt),
-    ...scores.map((score) => score.updatedAt),
-  ]);
 
   const testPassCount = subjectSummaries.filter((s) => s.average >= s.kkm).length;
   const maxScore = subjectSummaries.length > 0 ? Math.max(...subjectSummaries.map((s) => s.average)) : 0;
@@ -99,13 +94,7 @@ export default function RaporTab({ db }: RaporTabProps) {
       <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm space-y-4">
         {/* Filter bar */}
         <div className="flex flex-col lg:flex-row gap-3 justify-between lg:items-center">
-          <div>
-            <h3 className="text-sm font-bold text-slate-900">Rincian Lengkap Capaian Nilai</h3>
-            <p className="mt-1 inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
-              <Clock className="w-3.5 h-3.5 text-emerald-500" />
-              Last Updated: {formatLastUpdated(lastUpdated)}
-            </p>
-          </div>
+          <h3 className="text-sm font-bold text-slate-900">Rincian Lengkap Capaian Nilai</h3>
           <div className="flex flex-col sm:flex-row gap-2">
             <select
               value={detailFilter}
@@ -141,7 +130,6 @@ export default function RaporTab({ db }: RaporTabProps) {
                 <th className="px-4 py-3">TP/LM</th>
                 <th className="px-4 py-3 text-center">Nilai</th>
                 <th className="px-4 py-3">Catatan</th>
-                <th className="px-4 py-3 whitespace-nowrap">Last Updated</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -164,7 +152,6 @@ export default function RaporTab({ db }: RaporTabProps) {
                       )}
                     </td>
                     <td className="px-4 py-3 text-slate-500">{detail.note || "-"}</td>
-                    <td className="px-4 py-3 text-slate-500 whitespace-nowrap">{formatLastUpdated(detail.updatedAt)}</td>
                   </tr>
                 );
               }) : filteredScores.map((score) => {
@@ -188,13 +175,12 @@ export default function RaporTab({ db }: RaporTabProps) {
                         {isFailed ? "Perlu Perbaikan" : "Lolos"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-500 whitespace-nowrap">{formatLastUpdated(score.updatedAt)}</td>
                   </tr>
                 );
               })}
               {(hasDetailScores ? filteredDetails.length : filteredScores.length) === 0 && (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-slate-400 font-medium">
+                  <td colSpan={7} className="py-8 text-center text-slate-400 font-medium">
                     Tidak menemukan mata pelajaran matching.
                   </td>
                 </tr>
